@@ -961,10 +961,10 @@ function renderExplainability() {
       '</div>' +
       '<div class="example-justification">' + escapeHtml(justification) + '</div>' +
       '<div class="graph-legend">' +
-        '<span><span class="legend-dot" style="background:#58a6ff;"></span> Email</span>' +
-        '<span><span class="legend-dot" style="background:#f78166;border-radius:50%;"></span> Person</span>' +
-        '<span><span class="legend-dot" style="background:#3fb950;border-radius:50%;"></span> Topic</span>' +
-        '<span><span class="legend-dot" style="background:#d2a82b;border-radius:50%;"></span> Keyword</span>' +
+        '<span><span class="legend-dot" style="background:#58a6ff;border-radius:2px;"></span> &#9632; Email</span>' +
+        '<span><span class="legend-dot" style="background:#f78166;border-radius:50%;"></span> &#9679; Person</span>' +
+        '<span><span class="legend-dot" style="background:#3fb950;border-radius:50%;"></span> &#9733; Topic</span>' +
+        '<span><span class="legend-dot" style="background:#d2a82b;border-radius:50%;"></span> &#9650; Keyword</span>' +
       '</div>' +
       '<div class="graph-box" id="' + graphId + '"></div>';
 
@@ -1023,7 +1023,12 @@ function renderGraph(containerId, graphData) {
     },
     edges: { smooth: false },
     interaction: { hover: true, dragNodes: true, selectable: false },
-    nodes: { font: { color: '#e6e6e6', size: 13 } },
+    nodes: {
+      font: { color: '#e6e6e6', size: 13 },
+      borderWidth: 0,
+      color: { highlight: { border: '#30363d' }, hover: { border: '#30363d' } },
+      chosen: false,
+    },
   });
 }
 
