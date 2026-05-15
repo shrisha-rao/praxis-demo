@@ -966,6 +966,13 @@ function renderExplainability() {
         '<span style="color:#3fb950;">&#9733; Topic</span>' +
         '<span style="color:#d2a82b;">&#9650; Keyword</span>' +
       '</div>' +
+      '<div class="graph-legend" style="font-size:0.72rem;">' +
+        '<span style="color:var(--text-muted);">Edges: ' +
+          '<span style="color:#8b949e;">&#8212;</span> sent ' +
+          '<span style="color:#8b949e;">&#8212;</span> relates to ' +
+          '<span style="color:#8b949e;">&#8212;</span> mentions ' +
+          '<span style="color:#8b949e;">&#8212;</span> appears in</span>' +
+      '</div>' +
       '<div class="graph-box" id="' + graphId + '"></div>';
 
     container.appendChild(card);
