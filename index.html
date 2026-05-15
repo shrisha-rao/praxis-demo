@@ -307,6 +307,28 @@ h3 {
   background: var(--bg-elevated);
 }
 
+.graph-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.graph-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
 .bottom-metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -938,6 +960,12 @@ function renderExplainability() {
         '<span class="example-score">Relevance: ' + score + '</span>' +
       '</div>' +
       '<div class="example-justification">' + escapeHtml(justification) + '</div>' +
+      '<div class="graph-legend">' +
+        '<span><span class="legend-dot" style="background:#58a6ff;"></span> Email</span>' +
+        '<span><span class="legend-dot" style="background:#f78166;border-radius:50%;"></span> Person</span>' +
+        '<span><span class="legend-dot" style="background:#3fb950;border-radius:50%;"></span> Topic</span>' +
+        '<span><span class="legend-dot" style="background:#d2a82b;border-radius:50%;"></span> Keyword</span>' +
+      '</div>' +
       '<div class="graph-box" id="' + graphId + '"></div>';
 
     container.appendChild(card);
