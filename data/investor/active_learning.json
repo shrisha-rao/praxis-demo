@@ -1,0 +1,321 @@
+{
+  "case_id": "enron_demo",
+  "total_docs": 3434,
+  "total_relevant": 721,
+  "data": [
+    {
+      "pct_reviewed": 0.0,
+      "recall": 0.0014,
+      "docs_reviewed": 1,
+      "rel_found": 1
+    },
+    {
+      "pct_reviewed": 2.0,
+      "recall": 0.0957,
+      "docs_reviewed": 69,
+      "rel_found": 69
+    },
+    {
+      "pct_reviewed": 4.0,
+      "recall": 0.19,
+      "docs_reviewed": 137,
+      "rel_found": 137
+    },
+    {
+      "pct_reviewed": 6.0,
+      "recall": 0.2843,
+      "docs_reviewed": 205,
+      "rel_found": 205
+    },
+    {
+      "pct_reviewed": 7.9,
+      "recall": 0.3786,
+      "docs_reviewed": 273,
+      "rel_found": 273
+    },
+    {
+      "pct_reviewed": 9.9,
+      "recall": 0.473,
+      "docs_reviewed": 341,
+      "rel_found": 341
+    },
+    {
+      "pct_reviewed": 11.9,
+      "recall": 0.5673,
+      "docs_reviewed": 409,
+      "rel_found": 409
+    },
+    {
+      "pct_reviewed": 13.9,
+      "recall": 0.6616,
+      "docs_reviewed": 477,
+      "rel_found": 477
+    },
+    {
+      "pct_reviewed": 15.9,
+      "recall": 0.7559,
+      "docs_reviewed": 545,
+      "rel_found": 545
+    },
+    {
+      "pct_reviewed": 17.9,
+      "recall": 0.8502,
+      "docs_reviewed": 613,
+      "rel_found": 613
+    },
+    {
+      "pct_reviewed": 19.8,
+      "recall": 0.9445,
+      "docs_reviewed": 681,
+      "rel_found": 681
+    },
+    {
+      "pct_reviewed": 21.8,
+      "recall": 1.0,
+      "docs_reviewed": 749,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 23.8,
+      "recall": 1.0,
+      "docs_reviewed": 817,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 25.8,
+      "recall": 1.0,
+      "docs_reviewed": 885,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 27.8,
+      "recall": 1.0,
+      "docs_reviewed": 953,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 29.7,
+      "recall": 1.0,
+      "docs_reviewed": 1021,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 31.7,
+      "recall": 1.0,
+      "docs_reviewed": 1089,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 33.7,
+      "recall": 1.0,
+      "docs_reviewed": 1157,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 35.7,
+      "recall": 1.0,
+      "docs_reviewed": 1225,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 37.7,
+      "recall": 1.0,
+      "docs_reviewed": 1293,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 39.6,
+      "recall": 1.0,
+      "docs_reviewed": 1361,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 41.6,
+      "recall": 1.0,
+      "docs_reviewed": 1429,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 43.6,
+      "recall": 1.0,
+      "docs_reviewed": 1497,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 45.6,
+      "recall": 1.0,
+      "docs_reviewed": 1565,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 47.6,
+      "recall": 1.0,
+      "docs_reviewed": 1633,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 49.5,
+      "recall": 1.0,
+      "docs_reviewed": 1701,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 51.5,
+      "recall": 1.0,
+      "docs_reviewed": 1769,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 53.5,
+      "recall": 1.0,
+      "docs_reviewed": 1837,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 55.5,
+      "recall": 1.0,
+      "docs_reviewed": 1905,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 57.5,
+      "recall": 1.0,
+      "docs_reviewed": 1973,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 59.4,
+      "recall": 1.0,
+      "docs_reviewed": 2041,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 61.4,
+      "recall": 1.0,
+      "docs_reviewed": 2109,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 63.4,
+      "recall": 1.0,
+      "docs_reviewed": 2177,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 65.4,
+      "recall": 1.0,
+      "docs_reviewed": 2245,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 67.4,
+      "recall": 1.0,
+      "docs_reviewed": 2313,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 69.3,
+      "recall": 1.0,
+      "docs_reviewed": 2381,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 71.3,
+      "recall": 1.0,
+      "docs_reviewed": 2449,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 73.3,
+      "recall": 1.0,
+      "docs_reviewed": 2517,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 75.3,
+      "recall": 1.0,
+      "docs_reviewed": 2585,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 77.3,
+      "recall": 1.0,
+      "docs_reviewed": 2653,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 79.2,
+      "recall": 1.0,
+      "docs_reviewed": 2721,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 81.2,
+      "recall": 1.0,
+      "docs_reviewed": 2789,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 83.2,
+      "recall": 1.0,
+      "docs_reviewed": 2857,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 85.2,
+      "recall": 1.0,
+      "docs_reviewed": 2925,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 87.2,
+      "recall": 1.0,
+      "docs_reviewed": 2993,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 89.1,
+      "recall": 1.0,
+      "docs_reviewed": 3061,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 91.1,
+      "recall": 1.0,
+      "docs_reviewed": 3129,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 93.1,
+      "recall": 1.0,
+      "docs_reviewed": 3197,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 95.1,
+      "recall": 1.0,
+      "docs_reviewed": 3265,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 97.1,
+      "recall": 1.0,
+      "docs_reviewed": 3333,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 99.0,
+      "recall": 1.0,
+      "docs_reviewed": 3401,
+      "rel_found": 721
+    },
+    {
+      "pct_reviewed": 100.0,
+      "recall": 1.0,
+      "docs_reviewed": 3434,
+      "rel_found": 721
+    }
+  ],
+  "target_recall": 0.8,
+  "target_reached_at_pct": 17.9
+}

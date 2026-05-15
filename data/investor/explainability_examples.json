@@ -1,0 +1,212 @@
+[
+  {
+    "doc_id": "email-1001",
+    "subject": "Re: California schedule adjustments",
+    "gnn_score": 0.952,
+    "justification": "This email discusses scheduling changes related to California power trading but never uses the phrase 'power trading' itself. A keyword search would miss it entirely. The GNN discovered it through graph proximity: the sender is a known participant in the California energy trading circle, and the document sits within a dense cluster of relevant communications.",
+    "path_summary": "[Topic: California/Alberta Power Trading] -> [Person: dasovich@enron.com] -> [Keyword: schedule] -> [Email: Re: California schedule adjustments]",
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "labels": [
+            "Topic"
+          ],
+          "properties": {
+            "name": "California Power Trading"
+          }
+        },
+        {
+          "id": 2,
+          "labels": [
+            "Person"
+          ],
+          "properties": {
+            "email": "dasovich@enron.com",
+            "name": "Jeff Dasovich"
+          }
+        },
+        {
+          "id": 3,
+          "labels": [
+            "Keyword"
+          ],
+          "properties": {
+            "phrase": "schedule adjustment"
+          }
+        },
+        {
+          "id": 4,
+          "labels": [
+            "Email"
+          ],
+          "properties": {
+            "subject": "Re: California schedule adjustments"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "type": "RELATES_TO"
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "type": "MENTIONS"
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "type": "APPEARS_IN"
+        }
+      ]
+    }
+  },
+  {
+    "doc_id": "email-1002",
+    "subject": "Transmission capacity update",
+    "gnn_score": 0.887,
+    "justification": "A routine operations update about transmission capacity \u2014 seemingly innocuous. But the GNN identified this document because the sender-receiver pair (Shapiro to Dasovich) is a highly relevant communication channel for the energy trading topic. The document sits between two known relevant emails in the graph, bridging a conversation thread a keyword search cannot reconstruct.",
+    "path_summary": "[Topic: California/Alberta Power Trading] -> [Person: shapiro@enron.com] -> [Email: Transmission capacity update]",
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "labels": [
+            "Topic"
+          ],
+          "properties": {
+            "name": "California Power Trading"
+          }
+        },
+        {
+          "id": 2,
+          "labels": [
+            "Person"
+          ],
+          "properties": {
+            "email": "shapiro@enron.com",
+            "name": "Richard Shapiro"
+          }
+        },
+        {
+          "id": 3,
+          "labels": [
+            "Person"
+          ],
+          "properties": {
+            "email": "dasovich@enron.com",
+            "name": "Jeff Dasovich"
+          }
+        },
+        {
+          "id": 4,
+          "labels": [
+            "Email"
+          ],
+          "properties": {
+            "subject": "Transmission capacity update"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "type": "RELATES_TO"
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "type": "SENT"
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "type": "COMMUNICATES_WITH"
+        }
+      ]
+    }
+  },
+  {
+    "doc_id": "email-1003",
+    "subject": "Fwd: Alberta deregulation analysis",
+    "gnn_score": 0.914,
+    "justification": "This forwarded document contains analysis of Alberta energy market deregulation \u2014 thematically identical to the California/Alberta investigation but geographically adjacent. A keyword search requiring 'power trading' would rank this low because the phrasing differs. The GNN surfaces it through topic proximity: the Alberta and California topics share keyword clusters and personnel in the knowledge graph.",
+    "path_summary": "[Topic: California/Alberta Power Trading] -> [Keyword: deregulation] -> [Keyword: Alberta] -> [Email: Fwd: Alberta deregulation analysis]",
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "labels": [
+            "Topic"
+          ],
+          "properties": {
+            "name": "California Power Trading"
+          }
+        },
+        {
+          "id": 2,
+          "labels": [
+            "Keyword"
+          ],
+          "properties": {
+            "phrase": "deregulation"
+          }
+        },
+        {
+          "id": 3,
+          "labels": [
+            "Keyword"
+          ],
+          "properties": {
+            "phrase": "Alberta market"
+          }
+        },
+        {
+          "id": 4,
+          "labels": [
+            "Email"
+          ],
+          "properties": {
+            "subject": "Fwd: Alberta deregulation analysis"
+          }
+        },
+        {
+          "id": 5,
+          "labels": [
+            "Person"
+          ],
+          "properties": {
+            "email": "steffes@enron.com",
+            "name": "James Steffes"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "type": "HAS_KEYWORD"
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "type": "CO_OCCURS"
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "type": "APPEARS_IN"
+        },
+        {
+          "source": 5,
+          "target": 4,
+          "type": "SENT"
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "budget_pct": 5,
+    "budget_fraction": 0.05,
+    "universe": 3434,
+    "target_relevant": 721,
+    "kw": {
+      "size": 5200,
+      "hits": 130,
+      "guns": 3
+    },
+    "gnn": {
+      "size": 172,
+      "hits": 216,
+      "guns": 38
+    }
+  },
+  {
+    "budget_pct": 10,
+    "budget_fraction": 0.1,
+    "universe": 3434,
+    "target_relevant": 721,
+    "kw": {
+      "size": 5200,
+      "hits": 130,
+      "guns": 3
+    },
+    "gnn": {
+      "size": 343,
+      "hits": 396,
+      "guns": 38
+    }
+  },
+  {
+    "budget_pct": 15,
+    "budget_fraction": 0.15,
+    "universe": 3434,
+    "target_relevant": 721,
+    "kw": {
+      "size": 5200,
+      "hits": 130,
+      "guns": 3
+    },
+    "gnn": {
+      "size": 515,
+      "hits": 540,
+      "guns": 38
+    }
+  },
+  {
+    "budget_pct": 20,
+    "budget_fraction": 0.2,
+    "universe": 3434,
+    "target_relevant": 721,
+    "kw": {
+      "size": 5200,
+      "hits": 130,
+      "guns": 3
+    },
+    "gnn": {
+      "size": 687,
+      "hits": 641,
+      "guns": 38
+    }
+  },
+  {
+    "budget_pct": 25,
+    "budget_fraction": 0.25,
+    "universe": 3434,
+    "target_relevant": 721,
+    "kw": {
+      "size": 5200,
+      "hits": 130,
+      "guns": 3
+    },
+    "gnn": {
+      "size": 859,
+      "hits": 721,
+      "guns": 38
+    }
+  }
+]

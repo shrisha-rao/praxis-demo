@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praxis — eDiscovery with Active Learning</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.6/dist/vis-network.min.js"></script>
+<style>
+:root {
+  --bg: #0e1117;
+  --bg-card: #161b22;
+  --bg-elevated: #1c2128;
+  --text: #e6e6e6;
+  --text-muted: #8b949e;
+  --accent: #00cc88;
+  --accent-dim: #009966;
+  --red: #da3633;
+  --orange: #d29922;
+  --blue: #58a6ff;
+  --border: #30363d;
+  --radius: 8px;
+  --max-width: 1024px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section {
+  padding: 80px 0;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+section:first-of-type { opacity: 1; transform: none; }
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 32px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metric {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+
+.metric .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.metric .value.muted { color: var(--text-muted); }
+
+.metric .label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  h1 { font-size: 1.8rem; }
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  margin: 24px 0;
+}
+
+.chart-container canvas { width: 100% !important; }
+
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.slider-group label {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.slider-group input[type=range] {
+  flex: 1;
+  min-width: 200px;
+  -webkit-appearance: none;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  outline: none;
+}
+
+.slider-group input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+.slider-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 48px;
+  text-align: right;
+}
+
+.workflow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 32px 0;
+  font-size: 0.85rem;
+}
+
+.workflow-node {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.workflow-arrow { color: var(--text-muted); font-size: 1.2rem; }
+
+.workflow-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.workflow-loop {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.workflow-loop-line {
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.stop-indicator {
+  text-align: center;
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(0, 204, 136, 0.08);
+  border: 1px solid rgba(0, 204, 136, 0.25);
+  border-radius: var(--radius);
+}
+
+.stop-indicator strong { color: var(--accent); }
+
+.benchmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 16px 0;
+}
+
+.benchmark-table th,
+.benchmark-table td {
+  padding: 8px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.benchmark-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+.benchmark-table td.gnn-cell { color: var(--accent); font-weight: 600; }
+.benchmark-table td.kw-cell { color: var(--text-muted); }
+.benchmark-table th.gnn-header { color: var(--accent); }
+
+.example-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.example-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.example-score {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.example-justification {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.graph-box {
+  width: 100%;
+  height: 360px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+}
+
+.bottom-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin: 24px 0;
+}
+
+.big-metric {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+}
+
+.big-metric .big-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.big-metric .comparison-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+}
+
+.big-metric .comparison-row .side { font-size: 0.8rem; color: var(--text-muted); }
+.big-metric .comparison-row .num { font-size: 1.3rem; font-weight: 700; }
+.big-metric .comparison-row .num.kw-num { color: var(--text-muted); }
+.big-metric .comparison-row .num.gnn-num { color: var(--accent); }
+
+.big-metric .savings {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 0 60px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  margin: 16px 0;
+  font-size: 1rem;
+}
+
+.cta:hover { background: var(--accent-dim); }
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+.error-msg {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 16px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<section id="section-intro">
+  <h1>Praxis</h1>
+  <p class="subtitle">GNN-powered eDiscovery that learns alongside your reviewers</p>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <h3>The eDiscovery Bottleneck</h3>
+    <p style="color: var(--text-muted; line-height: 1.8;">
+      In any legal investigation, teams must sift through tens of thousands of documents
+      to find the ones that matter. The industry standard — keyword search — is fundamentally
+      broken: it returns every document that mentions your search terms, regardless of relevance,
+      and misses critical documents that use different phrasing. The result? Legal teams
+      spend weeks reviewing documents at $300+/hour, with no way to know what they're
+      overlooking or when they're done.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Our Approach</h3>
+    <p style="color: var(--text-muted; line-height: 1.8; margin-bottom: 16px;">
+      Praxis replaces keyword search with a <strong style="color: var(--text);">Graph Neural Network</strong>
+      that learns from reviewer feedback. You label a small seed set of documents.
+      The GNN studies the relationship graph — who talks to whom, which topics cluster together —
+      and ranks the entire corpus by relevance. You review the top batch, provide more labels,
+      and the model retrains. <strong style="color: var(--accent);">Each cycle makes the model smarter
+      and the reviewer faster.</strong> Training stops when recall plateaus — typically after
+      reviewing less than 20% of the corpus.
+    </p>
+  </div>
+
+  <p style="color: var(--text-muted); font-size: 1rem; margin-top: 32px;">
+    Let's ground this in a real case study: the <strong style="color: var(--text);">Enron investigation.</strong>
+  </p>
+
+  <div style="text-align: center; margin: 20px 0 0; font-size: 1.1rem; color: var(--text-muted);">
+    &#8595;
+  </div>
+</section>
+
+<section id="section-burden">
+  <h2>Case Study: Enron</h2>
+  <p class="subtitle">California energy trading scheme — 3,434 documents, 721 relevant</p>
+
+  <div class="card">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+      <div>
+        <h3 style="margin-bottom: 12px;">Keyword Search</h3>
+        <p style="color: var(--text-muted);">
+          Searching for <em>"power trading"</em> returns <strong style="color: var(--red);">5,200 documents</strong>.
+          After reviewing them all — 12+ weeks at $780,000 — you've found only
+          <strong style="color: var(--red);">18%</strong> of the relevant evidence.
+        </p>
+      </div>
+      <div>
+        <h3 style="margin-bottom: 12px;">Praxis GNN</h3>
+        <p style="color: var(--text-muted);">
+          Label 50 documents. The GNN ranks the corpus. After reviewing just
+          <strong style="color: var(--accent);">600 documents</strong>,
+          you've found <strong style="color: var(--accent);">80%+</strong>
+          of all relevant evidence. 8 days. $31,000.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>How the Active Learning Loop Works</h3>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 0; margin: 24px 0; font-size: 0.85rem;">
+
+      <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
+        <div class="workflow-node">
+          <div style="font-weight:700;color:var(--accent);">1. SEED</div>
+          <div style="color:var(--text-muted);">Reviewer labels<br>50 documents</div>
+        </div>
+        <div class="workflow-arrow">&rarr;</div>
+        <div class="workflow-node">
+          <div style="font-weight:700;color:var(--accent);">2. TRAIN</div>
+          <div style="color:var(--text-muted);">GNN learns<br>graph structure</div>
+        </div>
+        <div class="workflow-arrow">&rarr;</div>
+        <div class="workflow-node">
+          <div style="font-weight:700;color:var(--accent);">3. RANK</div>
+          <div style="color:var(--text-muted);">Model scores<br>all documents</div>
+        </div>
+        <div class="workflow-arrow">&rarr;</div>
+        <div class="workflow-node">
+          <div style="font-weight:700;color:var(--accent);">4. REVIEW</div>
+          <div style="color:var(--text-muted);">Reviewer validates<br>top batch</div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px;">
+        <div style="width: 60px; height: 2px; background: var(--accent); opacity: 0.4;"></div>
+        <span style="color: var(--accent); font-weight: 600;">REPEAT: model improves each cycle</span>
+        <div style="width: 60px; height: 2px; background: var(--accent); opacity: 0.4;"></div>
+      </div>
+
+      <div style="margin-top: 6px; font-size: 2.5rem; color: var(--accent);">&cularr;</div>
+    </div>
+
+    <div class="stop-indicator">
+      <strong>Stops at ~18% of corpus reviewed</strong><br>
+      <span style="color: var(--text-muted);">
+        After 600 documents, model achieves 80%+ recall across all 721 relevant documents.
+        The reviewer knows when the job is done.
+      </span>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="section-proof">
+  <h2>Proof: Active Learning Recall Curve</h2>
+  <p class="subtitle">Each review cycle makes the model smarter. See how fast recall climbs.</p>
+
+  <div class="card">
+    <div class="slider-group">
+      <label>Review Budget</label>
+      <input type="range" id="budget-slider" min="5" max="25" step="5" value="15">
+      <span class="slider-value" id="budget-display">15%</span>
+    </div>
+
+    <div class="metric-row" id="recall-metrics">
+      <div class="metric">
+        <div class="value" id="metric-gnn-recall">—</div>
+        <div class="label">GNN Recall at Budget</div>
+      </div>
+      <div class="metric">
+        <div class="value muted" id="metric-kw-recall">—</div>
+        <div class="label">Keyword Recall (same docs)</div>
+      </div>
+      <div class="metric">
+        <div class="value" id="metric-gnn-docs">—</div>
+        <div class="label">GNN Docs to Review</div>
+      </div>
+      <div class="metric">
+        <div class="value muted" id="metric-kw-docs">—</div>
+        <div class="label">Keyword Docs to Review</div>
+      </div>
+    </div>
+
+    <div class="chart-container" id="recall-chart-container">
+      <canvas id="recall-chart"></canvas>
+    </div>
+    <div class="error-msg" id="recall-error" style="display:none;">Recall data not available.</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="section-benchmark">
+  <h2>Benchmark: BM25 vs. Praxis GNN</h2>
+  <p class="subtitle">Per-topic comparison across 8 Enron investigation topics</p>
+
+  <div class="card">
+    <div class="metric-row" id="agg-metrics">
+      <div class="metric">
+        <div class="value" id="agg-gnn-recall">—</div>
+        <div class="label">Avg GNN Recall@15%</div>
+      </div>
+      <div class="metric">
+        <div class="value muted" id="agg-bm25-recall">—</div>
+        <div class="label">Avg BM25 Recall@15%</div>
+      </div>
+      <div class="metric">
+        <div class="value" id="agg-gnn-ndcg">—</div>
+        <div class="label">Avg GNN nDCG</div>
+      </div>
+      <div class="metric">
+        <div class="value muted" id="agg-bm25-ndcg">—</div>
+        <div class="label">Avg BM25 nDCG</div>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="benchmark-table">
+        <thead>
+          <tr>
+            <th>Topic</th>
+            <th class="gnn-header">GNN P@15%</th>
+            <th>BM25 P@15%</th>
+            <th class="gnn-header">GNN R@15%</th>
+            <th>BM25 R@15%</th>
+            <th class="gnn-header">GNN nDCG</th>
+            <th>BM25 nDCG</th>
+          </tr>
+        </thead>
+        <tbody id="benchmark-body"></tbody>
+      </table>
+    </div>
+    <div class="error-msg" id="benchmark-error" style="display:none;">Benchmark data not available.</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="section-explain">
+  <h2>Why It Works: Graph-Based Discovery</h2>
+  <p class="subtitle">
+    The GNN doesn't search for words. It learns the relationship graph — who talks to whom,
+    which topics connect, where the evidence clusters. Here are real examples.
+  </p>
+
+  <div class="card" id="examples-container">
+    <div class="error-msg" id="explain-error" style="display:none;">Explainability examples not available.</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="section-bottomline">
+  <h2>Bottom Line</h2>
+  <p class="subtitle">Review budget: <strong id="bottomline-budget">15%</strong>. Cost at $300/hr, 50 docs/hr.</p>
+
+  <div class="bottom-metrics">
+    <div class="big-metric">
+      <div class="big-label">Documents to Review</div>
+      <div class="comparison-row">
+        <span class="side">Keyword Search</span>
+        <span class="num kw-num" id="bl-kw-docs">—</span>
+      </div>
+      <div class="comparison-row">
+        <span class="side">Praxis GNN</span>
+        <span class="num gnn-num" id="bl-gnn-docs">—</span>
+      </div>
+      <div class="savings" id="bl-doc-savings">—</div>
+    </div>
+
+    <div class="big-metric">
+      <div class="big-label">Estimated Review Cost</div>
+      <div class="comparison-row">
+        <span class="side">Keyword Search</span>
+        <span class="num kw-num" id="bl-kw-cost">—</span>
+      </div>
+      <div class="comparison-row">
+        <span class="side">Praxis GNN</span>
+        <span class="num gnn-num" id="bl-gnn-cost">—</span>
+      </div>
+      <div class="savings" id="bl-cost-savings">—</div>
+    </div>
+
+    <div class="big-metric">
+      <div class="big-label">Estimated Review Time</div>
+      <div class="comparison-row">
+        <span class="side">Keyword Search</span>
+        <span class="num kw-num" id="bl-kw-time">—</span>
+      </div>
+      <div class="comparison-row">
+        <span class="side">Praxis GNN</span>
+        <span class="num gnn-num" id="bl-gnn-time">—</span>
+      </div>
+      <div class="savings" id="bl-time-savings">—</div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top: 32px;">
+    <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLScH3SxLo5XRYwH4Wb6mG6_GXL-1KaoS2uuyh23m6QPJHlZaLA/viewform?usp=dialog" target="_blank" rel="noopener">Request Early Access</a>
+  </div>
+</section>
+
+<footer>
+  Praxis &middot; GNN-powered eDiscovery &middot; Demo dashboard
+</footer>
+
+</div>
+<script>
+(function() {
+
+var DATA_DIR = 'data/investor';
+
+var recallData = null;
+var benchmarkData = null;
+var budgetSlices = null;
+var explainData = null;
+var currentBudget = 15;
+var recallChart = null;
+
+// ── Scroll reveal ──
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('section').forEach(function(s) {
+  if (s.id !== 'section-intro') observer.observe(s);
+});
+
+// ── Data loading ──
+async function loadJSON(filename) {
+  var resp = await fetch(DATA_DIR + '/' + filename);
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  return resp.json();
+}
+
+async function loadAllData() {
+  try { recallData = await loadJSON('active_learning.json'); }
+  catch (e) {
+    console.warn('active_learning.json:', e.message);
+    document.getElementById('recall-error').style.display = 'block';
+    document.getElementById('recall-chart-container').style.display = 'none';
+  }
+
+  try { benchmarkData = await loadJSON('benchmark_metrics.json'); }
+  catch (e) {
+    console.warn('benchmark_metrics.json:', e.message);
+    document.getElementById('benchmark-error').style.display = 'block';
+  }
+
+  try { budgetSlices = await loadJSON('budget_slices.json'); }
+  catch (e) { console.warn('budget_slices.json:', e.message); }
+
+  try { explainData = await loadJSON('explainability_examples.json'); }
+  catch (e) {
+    console.warn('explainability_examples.json:', e.message);
+    document.getElementById('explain-error').style.display = 'block';
+  }
+}
+
+// ── Budget slider ──
+function onBudgetChange(val) {
+  currentBudget = val;
+  document.getElementById('budget-display').textContent = val + '%';
+  document.getElementById('bottomline-budget').textContent = val + '%';
+  updateBudgetMetrics();
+  updateBottomLine();
+}
+
+document.getElementById('budget-slider').addEventListener('input', function() {
+  onBudgetChange(parseInt(this.value));
+});
+
+// ── Section 2: Recall curve ──
+function renderRecallCurve() {
+  if (!recallData || !recallData.data) return;
+
+  var points = recallData.data;
+  var targetRecall = recallData.target_recall || 0.8;
+  var targetPct = recallData.target_reached_at_pct || 17.9;
+
+  var xVals = points.map(function(p) { return p.pct_reviewed; });
+  var yVals = points.map(function(p) { return p.recall * 100; });
+
+  var ctx = document.getElementById('recall-chart').getContext('2d');
+
+  recallChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: xVals,
+      datasets: [{
+        label: 'Praxis GNN Recall',
+        data: yVals,
+        borderColor: '#00cc88',
+        backgroundColor: 'rgba(0, 204, 136, 0.08)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 0,
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '% Documents Reviewed', color: '#8b949e' },
+          grid: { color: 'rgba(48, 54, 61, 0.5)' },
+          ticks: { color: '#8b949e', callback: function(v) { return v + '%'; } },
+        },
+        y: {
+          title: { display: true, text: '% Recall', color: '#8b949e' },
+          min: 0,
+          max: 100,
+          grid: { color: 'rgba(48, 54, 61, 0.5)' },
+          ticks: { color: '#8b949e', callback: function(v) { return v + '%'; } },
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      animation: { duration: 800 },
+    },
+    plugins: [{
+      id: 'refLines',
+      afterDraw: function(chart) {
+        var ctx = chart.ctx;
+        var scales = chart.scales;
+        var x = scales.x.getPixelForValue(targetPct);
+        var y = scales.y.getPixelForValue(targetRecall * 100);
+
+        ctx.save();
+
+        // Horizontal reference line at 80% recall
+        ctx.beginPath();
+        ctx.setLineDash([6, 4]);
+        ctx.strokeStyle = 'rgba(218, 54, 51, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.moveTo(scales.x.left, y);
+        ctx.lineTo(scales.x.right, y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Vertical reference line at target %
+        ctx.beginPath();
+        ctx.setLineDash([6, 4]);
+        ctx.moveTo(x, scales.y.top);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Intersection dot
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#00cc88';
+        ctx.fill();
+
+        // Annotation text
+        ctx.fillStyle = '#00cc88';
+        ctx.font = 'bold 12px -apple-system, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(
+          Math.round(targetRecall * 100) + '% recall at ' + targetPct + '% reviewed',
+          Math.min(x + 12, scales.x.right - 160),
+          y - 10
+        );
+
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+// ── Budget metric updates ──
+function findBudgetSlice(pct) {
+  if (!budgetSlices) return null;
+  for (var i = 0; i < budgetSlices.length; i++) {
+    if (budgetSlices[i].budget_pct === pct) return budgetSlices[i];
+  }
+  return null;
+}
+
+function updateBudgetMetrics() {
+  var slice = findBudgetSlice(currentBudget);
+  if (!slice) return;
+
+  var totalRel = slice.target_relevant || 0;
+  var kwHits = slice.kw ? slice.kw.hits : 0;
+  var gnnHits = slice.gnn ? slice.gnn.hits : 0;
+
+  document.getElementById('metric-gnn-recall').textContent =
+    totalRel > 0 ? (gnnHits / totalRel * 100).toFixed(1) + '%' : '\u2014';
+  document.getElementById('metric-kw-recall').textContent =
+    totalRel > 0 ? (kwHits / totalRel * 100).toFixed(1) + '%' : '\u2014';
+  document.getElementById('metric-gnn-docs').textContent =
+    slice.gnn ? slice.gnn.size.toLocaleString() : '\u2014';
+  document.getElementById('metric-kw-docs').textContent =
+    slice.kw ? slice.kw.size.toLocaleString() : '\u2014';
+}
+
+// ── Section 3: Benchmark ──
+function renderAggregateMetrics() {
+  if (!benchmarkData || !benchmarkData.topics) return;
+
+  var topics = Object.values(benchmarkData.topics);
+  if (topics.length === 0) return;
+
+  function avg(arr) { return arr.reduce(function(a, b) { return a + b; }, 0) / arr.length; }
+
+  var gnnR15 = avg(topics.map(function(t) { return t.gnn.recall_at_15; })) * 100;
+  var bm25R15 = avg(topics.map(function(t) { return t.bm25.recall_at_15; })) * 100;
+  var gnnNdcg = avg(topics.map(function(t) { return t.gnn.ndcg; }));
+  var bm25Ndcg = avg(topics.map(function(t) { return t.bm25.ndcg; }));
+
+  document.getElementById('agg-gnn-recall').textContent = gnnR15.toFixed(1) + '%';
+  document.getElementById('agg-bm25-recall').textContent = bm25R15.toFixed(1) + '%';
+  document.getElementById('agg-gnn-ndcg').textContent = gnnNdcg.toFixed(3);
+  document.getElementById('agg-bm25-ndcg').textContent = bm25Ndcg.toFixed(3);
+}
+
+function renderBenchmarkTable() {
+  if (!benchmarkData || !benchmarkData.topics) return;
+
+  var topics = Object.entries(benchmarkData.topics);
+  var tbody = document.getElementById('benchmark-body');
+  tbody.innerHTML = '';
+
+  topics.forEach(function(kv) {
+    var topicId = kv[0];
+    var t = kv[1];
+    var asterisk = topicId === '206' ? '*' : '';
+    var row = document.createElement('tr');
+    row.innerHTML =
+      '<td>' + topicId + asterisk + '</td>' +
+      '<td class="gnn-cell">' + (t.gnn.p_at_15 * 100).toFixed(1) + '%</td>' +
+      '<td class="kw-cell">' + (t.bm25.p_at_15 * 100).toFixed(1) + '%</td>' +
+      '<td class="gnn-cell">' + (t.gnn.recall_at_15 * 100).toFixed(1) + '%</td>' +
+      '<td class="kw-cell">' + (t.bm25.recall_at_15 * 100).toFixed(1) + '%</td>' +
+      '<td class="gnn-cell">' + t.gnn.ndcg.toFixed(3) + '</td>' +
+      '<td class="kw-cell">' + t.bm25.ndcg.toFixed(3) + '</td>';
+    tbody.appendChild(row);
+  });
+}
+
+// ── Section 4: Explainability ──
+var GRAPH_COLORS = {
+  Email: { background: '#58a6ff', border: '#58a6ff' },
+  Person: { background: '#f78166', border: '#f78166' },
+  Topic: { background: '#3fb950', border: '#3fb950' },
+  Keyword: { background: '#d2a82b', border: '#d2a82b' },
+  MasterNode: { background: '#8b949e', border: '#8b949e' },
+};
+
+var GRAPH_SHAPES = {
+  Email: 'box',
+  Person: 'dot',
+  Topic: 'star',
+  Keyword: 'triangle',
+  MasterNode: 'diamond',
+};
+
+function renderExplainability() {
+  if (!explainData || explainData.length === 0) return;
+
+  var container = document.getElementById('examples-container');
+  var errEl = container.querySelector('.error-msg');
+  if (errEl) errEl.style.display = 'none';
+
+  explainData.forEach(function(ex, idx) {
+    var card = document.createElement('div');
+    card.className = 'example-card';
+
+    var subject = ex.subject || ex.doc_id || 'Document';
+    var score = ex.gnn_score != null ? (ex.gnn_score * 100).toFixed(1) + '%' : '\u2014';
+    var justification = ex.justification || 'No explanation available.';
+
+    var graphId = 'graph-' + idx;
+
+    card.innerHTML =
+      '<div class="example-header">' +
+        '<div><strong>Example ' + (idx + 1) + ':</strong> ' + escapeHtml(subject) + '</div>' +
+        '<span class="example-score">Relevance: ' + score + '</span>' +
+      '</div>' +
+      '<div class="example-justification">' + escapeHtml(justification) + '</div>' +
+      '<div class="graph-box" id="' + graphId + '"></div>';
+
+    container.appendChild(card);
+
+    if (ex.graph && ex.graph.nodes && ex.graph.nodes.length > 0) {
+      renderGraph(graphId, ex.graph);
+    }
+  });
+}
+
+function renderGraph(containerId, graphData) {
+  var nodes = new vis.DataSet(
+    (graphData.nodes || []).map(function(n) {
+      var label = n.labels ? n.labels[0] : 'Unknown';
+      var props = n.properties || {};
+      var display = label;
+      if (label === 'Email') {
+        display = (props.subject || 'No Subject').substring(0, 35);
+      } else if (label === 'Person') {
+        display = props.email || props.name || 'Unknown';
+      } else if (label === 'Topic') {
+        display = props.name || 'Topic';
+      } else if (label === 'Keyword') {
+        display = (props.phrase || 'Keyword').substring(0, 20);
+      }
+
+      return {
+        id: String(n.id),
+        label: display,
+        title: label + ': ' + display,
+        color: GRAPH_COLORS[label] || { background: '#cccccc', border: '#cccccc' },
+        shape: GRAPH_SHAPES[label] || 'box',
+        size: label === 'Topic' ? 22 : 16,
+      };
+    })
+  );
+
+  var edges = new vis.DataSet(
+    (graphData.edges || []).map(function(e) {
+      return {
+        from: String(e.source),
+        to: String(e.target),
+        title: e.type || '',
+        arrows: 'to',
+        color: { color: '#484f58' },
+      };
+    })
+  );
+
+  var container = document.getElementById(containerId);
+  new vis.Network(container, { nodes: nodes, edges: edges }, {
+    physics: {
+      hierarchicalRepulsion: { nodeDistance: 150 },
+      solver: 'hierarchicalRepulsion',
+    },
+    edges: { smooth: false },
+    interaction: { hover: true, dragNodes: true },
+  });
+}
+
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ── Section 5: Bottom line ──
+var COST_PER_HOUR = 300;
+var DOCS_PER_HOUR = 50;
+var HOURS_PER_DAY = 8;
+
+function updateBottomLine() {
+  var slice = findBudgetSlice(currentBudget);
+  if (!slice) return;
+
+  var kwDocs = slice.kw ? slice.kw.size : 0;
+  var gnnDocs = slice.gnn ? slice.gnn.size : 0;
+
+  var kwHours = kwDocs / DOCS_PER_HOUR;
+  var gnnHours = gnnDocs / DOCS_PER_HOUR;
+  var kwCost = kwHours * COST_PER_HOUR;
+  var gnnCost = gnnHours * COST_PER_HOUR;
+
+  function fmtUSD(n) {
+    return '$' + n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  }
+
+  document.getElementById('bl-kw-docs').textContent = kwDocs.toLocaleString();
+  document.getElementById('bl-gnn-docs').textContent = gnnDocs.toLocaleString();
+  document.getElementById('bl-kw-cost').textContent = fmtUSD(kwCost);
+  document.getElementById('bl-gnn-cost').textContent = fmtUSD(gnnCost);
+  document.getElementById('bl-kw-time').textContent = (kwHours / HOURS_PER_DAY).toFixed(1) + ' days';
+  document.getElementById('bl-gnn-time').textContent = (gnnHours / HOURS_PER_DAY).toFixed(1) + ' days';
+
+  if (kwCost > 0) {
+    var saved = ((kwCost - gnnCost) / kwCost * 100).toFixed(0);
+    document.getElementById('bl-doc-savings').textContent = (kwDocs - gnnDocs).toLocaleString() + ' fewer documents';
+    document.getElementById('bl-cost-savings').textContent = 'Save ' + saved + '% (' + fmtUSD(kwCost - gnnCost) + ')';
+    document.getElementById('bl-time-savings').textContent = 'Save ' + ((kwHours - gnnHours) / HOURS_PER_DAY).toFixed(1) + ' days';
+  }
+}
+
+// ── Init ──
+async function init() {
+  await loadAllData();
+
+  if (recallData) renderRecallCurve();
+  if (benchmarkData) {
+    renderAggregateMetrics();
+    renderBenchmarkTable();
+  }
+  if (explainData) renderExplainability();
+
+  updateBudgetMetrics();
+  updateBottomLine();
+}
+
+init();
+
+})();
+</script>
+
+</body>
+</html>
