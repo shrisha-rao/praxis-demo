@@ -967,11 +967,10 @@ function renderExplainability() {
         '<span style="color:#d2a82b;">&#9650; Keyword</span>' +
       '</div>' +
       '<div class="graph-legend" style="font-size:0.72rem;">' +
-        '<span style="color:var(--text-muted);">Edges: ' +
-          '<span style="color:#8b949e;">&#8212;</span> sent ' +
-          '<span style="color:#8b949e;">&#8212;</span> relates to ' +
-          '<span style="color:#8b949e;">&#8212;</span> mentions ' +
-          '<span style="color:#8b949e;">&#8212;</span> appears in</span>' +
+        '<span style="color:#f78166;">&#8212; sent</span>' +
+        '<span style="color:#58a6ff;">&#8212; relates to</span>' +
+        '<span style="color:#d2a82b;">&#8212; mentions</span>' +
+        '<span style="color:#8b949e;">&#8212; appears in</span>' +
       '</div>' +
       '<div class="graph-box" id="' + graphId + '"></div>';
 
@@ -982,6 +981,16 @@ function renderExplainability() {
     }
   });
 }
+
+var EDGE_COLORS = {
+  SENT: '#f78166',
+  RELATES_TO: '#58a6ff',
+  MENTIONS: '#d2a82b',
+  APPEARS_IN: '#8b949e',
+  COMMUNICATES_WITH: '#3fb950',
+  CO_OCCURS: '#da3633',
+  HAS_KEYWORD: '#d2a82b',
+};
 
 function renderGraph(containerId, graphData) {
   var nodes = new vis.DataSet(
@@ -1012,12 +1021,13 @@ function renderGraph(containerId, graphData) {
 
   var edges = new vis.DataSet(
     (graphData.edges || []).map(function(e) {
+      var edgeColor = EDGE_COLORS[e.type] || '#484f58';
       return {
         from: String(e.source),
         to: String(e.target),
         title: e.type || '',
         arrows: 'to',
-        color: { color: '#484f58' },
+        color: { color: edgeColor },
       };
     })
   );
